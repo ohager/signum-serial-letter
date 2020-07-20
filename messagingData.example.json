@@ -1,0 +1,7 @@
+{
+  "host": "https://testnet-2.burst-alliance.org:6876",
+  "message": "Your message here",
+  "recipients": [
+    // add account ids or addresses here
+  ]
+}
