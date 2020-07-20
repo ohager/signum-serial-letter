@@ -24,12 +24,12 @@ const bulkSend = async ({host, recipients, message, isDryRun}) => {
   const {standard} = await api.network.suggestFee();
   const totalMessages = recipients.length
 
-  const fee = BurstValue.fromPlanck(standard.toString(10));
-
+  const fee = standard.toString(10);
+  const totalCosts = BurstValue.fromPlanck(fee).multiply(totalMessages);
   console.info(`You are about to send to ${totalMessages} accounts.`)
-  console.info(`This will cost you approx. ${fee.multiply(totalMessages).toString()}`)
+  console.info(`This will cost you approx. ${totalCosts.toString()}`)
   console.info('Used Host:', host)
-  if(isDryRun){
+  if (isDryRun) {
     console.info('Dry Run is active - nothing will be sent!')
   }
   console.info('--------------------------------------\n')
@@ -42,7 +42,7 @@ const bulkSend = async ({host, recipients, message, isDryRun}) => {
 
   console.info('Ok. There we go...')
   const {publicKey, signPrivateKey} = generateMasterKeys(passphrase);
-  const chunks = chunk(recipients, 3);
+  const chunks = chunk(recipients, 10);
   let progress = 0;
   for (let i = 0; i < chunks.length; i++) {
     const chunkedRecipients = chunks[i];
@@ -54,7 +54,7 @@ const bulkSend = async ({host, recipients, message, isDryRun}) => {
           senderPublicKey: publicKey,
           senderPrivateKey: signPrivateKey,
           deadline: 60 * 6,
-          feePlanck: fee.getPlanck(),
+          feePlanck: fee,
           message,
           messageIsText: true,
         })

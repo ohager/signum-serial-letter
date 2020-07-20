@@ -1,14 +1,10 @@
 {
   "host": "https://testnet-2.burst-alliance.org:6876",
-  "message": "Your message here",
+  "message": "This is a burst serial letter",
   "recipients": [
-    "9584257666639736235",
-    "6619453254276235919",
-    "2687803120900173932",
-    "6336510190095041637",
-    "14543288001916739623",
-    "13596897316694088941",
-    "BURST-N7YQ-5MW5-NCHD-DXKUA",
-    "14978592240935099976"
+    "BURST-7JDH-TSYZ-9N2J-GR3VG",
+    "BURST-GPNE-WDRH-NYH9-DJHQ4",
+    "BURST-DVRB-NXMK-DPZU-8PFTS",
+    "6502115112683865257"
   ]
 }
