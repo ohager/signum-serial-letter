@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const yargs = require('yargs')
 const {join} = require('path');
 const {loadMessagingInfo} = require('./loadMessagingData')

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Send messages in masses to the Burstcoin blockchain",
   "main": "src/index.js",
+  "bin": {
+    "burst-serial-letter": "./src/index.js"
+  },
   "scripts": {
     "start": "node ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
