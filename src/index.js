@@ -17,7 +17,7 @@ const args = yargs
   .describe('t', 'Runs without sending')
   .help('h')
   .alias('h', 'help')
-  .epilog('copyright 2020')
+  .epilog('Made with ❤️ by ohager (BURST-9K9L-4CB5-88Y5-F5G4Z)')
   .argv;
 
 (async () => {
