@@ -6,7 +6,7 @@ const chunk = require('lodash.chunk')
 
 const askForPassphrase = async () => prompt([
   {
-    type: 'input',
+    type: 'password',
     name: 'passphrase',
     message: 'Enter your passphrase to confirm (Leave empty to abort)',
     default: ''
