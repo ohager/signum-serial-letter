@@ -31,7 +31,7 @@ const unifyRecipientAddresses = (recipients) => {
 
 const loadMessagingInfo = (filePath) => {
   try {
-
+    console.info(`Loading ${filePath}...`)
     const jsonStr = readFileSync(filePath).toString('utf-8');
     const json = JSON.parse(jsonStr);
     const result = new Validator().validate(json, schema)

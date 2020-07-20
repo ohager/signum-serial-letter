@@ -1,6 +1,7 @@
 const yargs = require('yargs')
 const {join} = require('path');
 const {loadMessagingInfo} = require('./loadMessagingData')
+const {bulkSend} = require('./bulkSend')
 
 const args = yargs
   .usage('Usage: $0 [options]')
@@ -17,7 +18,7 @@ const args = yargs
 (async () => {
   try {
     const messagingInfo = loadMessagingInfo(args.d);
-    return Promise.resolve()
+    await bulkSend(messagingInfo)
   } catch (e) {
     console.error('Oh damn. This didn\'t work')
     console.error(e.message)
