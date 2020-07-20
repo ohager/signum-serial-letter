@@ -18,7 +18,7 @@ const drySend = () =>
     setTimeout(resolve, 1000)
   })
 
-const bulkSend = async ({host, recipients, message}) => {
+const bulkSend = async ({host, recipients, message, isDryRun}) => {
 
   const api = composeApi(new ApiSettings(host));
   const {standard} = await api.network.suggestFee();
@@ -26,10 +26,12 @@ const bulkSend = async ({host, recipients, message}) => {
 
   const fee = BurstValue.fromPlanck(standard.toString(10));
 
-
   console.info(`You are about to send to ${totalMessages} accounts.`)
   console.info(`This will cost you approx. ${fee.multiply(totalMessages).toString()}`)
   console.info('Used Host:', host)
+  if(isDryRun){
+    console.info('Dry Run is active - nothing will be sent!')
+  }
   console.info('--------------------------------------\n')
   const {passphrase} = await askForPassphrase()
 
@@ -40,21 +42,22 @@ const bulkSend = async ({host, recipients, message}) => {
 
   console.info('Ok. There we go...')
   const {publicKey, signPrivateKey} = generateMasterKeys(passphrase);
-  const chunks = chunk(recipients, 10);
+  const chunks = chunk(recipients, 3);
   let progress = 0;
   for (let i = 0; i < chunks.length; i++) {
     const chunkedRecipients = chunks[i];
     const batch = chunkedRecipients
-      .map(recipientId => drySend()
-        // api.message.sendMessage({
-        //   recipientId,
-        //   senderPublicKey: publicKey,
-        //   senderPrivateKey: signPrivateKey,
-        //   deadline: 60 * 6,
-        //   feePlanck: fee.getPlanck(),
-        //   message,
-        //   messageIsText: true,
-        // })
+      .map(recipientId => isDryRun
+        ? drySend()
+        : api.message.sendMessage({
+          recipientId,
+          senderPublicKey: publicKey,
+          senderPrivateKey: signPrivateKey,
+          deadline: 60 * 6,
+          feePlanck: fee.getPlanck(),
+          message,
+          messageIsText: true,
+        })
       )
     progress += batch.length
     await Promise.all(batch)
