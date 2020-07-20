@@ -1,6 +1,6 @@
 {
   "name": "burst-serial-letter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Send messages in masses to the Burstcoin blockchain",
   "main": "src/index.js",
   "bin": {
