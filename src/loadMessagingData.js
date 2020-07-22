@@ -6,6 +6,7 @@ const Validator = require('fastest-validator');
 const schema = {
   host: {type: "url"},
   message: {type: "string", min: 3, max: 1000},
+  maxSlots: {type: "number", min: 1, max: 1020},
   recipients: {
     type: "array", empty: false, unique: true, items: {
       type: 'string', empty: false, min: 10, max: 26

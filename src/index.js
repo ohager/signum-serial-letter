@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-const {join} = require('path');
 const {loadMessagingInfo} = require('./loadMessagingData')
 const {bulkSend} = require('./bulkSend')
 
@@ -11,7 +10,7 @@ const args = yargs
   .alias('d', 'data')
   .nargs('d', 1)
   .describe('d', 'Loads data from file')
-  .default('d', join(__dirname, '../messagingData.json'))
+  .default('d', './messagingData.json')
   .alias('t', 'test')
   .boolean('t')
   .describe('t', 'Runs without sending')
@@ -26,6 +25,6 @@ const args = yargs
     await bulkSend({ ...messagingInfo, isDryRun : args.t })
   } catch (e) {
     console.error('Oh damn. This didn\'t work')
-    console.error(e.message)
+    console.error(e)
   }
 })()

@@ -1,8 +1,10 @@
 const {composeApi, ApiSettings} = require('@burstjs/core')
-const {BurstValue} = require('@burstjs/util')
 const {generateMasterKeys} = require('@burstjs/crypto')
 const {prompt} = require('inquirer')
 const chunk = require('lodash.chunk')
+const {getSlotFee, calculateTotalFeeCosts} = require('./fees')
+
+const ChunkSize = 10
 
 const askForPassphrase = async () => prompt([
   {
@@ -18,17 +20,18 @@ const drySend = () =>
     setTimeout(resolve, 1000)
   })
 
-const bulkSend = async ({host, recipients, message, isDryRun}) => {
+const bulkSend = async ({host, recipients, message, maxSlots, isDryRun}) => {
 
   const api = composeApi(new ApiSettings(host));
-  const {standard} = await api.network.suggestFee();
   const totalMessages = recipients.length
 
-  const fee = standard.toString(10);
-  const totalCosts = BurstValue.fromPlanck(fee).multiply(totalMessages);
+  const totalCosts = calculateTotalFeeCosts(totalMessages, maxSlots)
+  const minimumBlocksNeeded = Math.ceil(totalMessages/maxSlots)
+  console.info('Used Host:', host)
   console.info(`You are about to send to ${totalMessages} accounts.`)
   console.info(`This will cost you approx. ${totalCosts.toString()}`)
-  console.info('Used Host:', host)
+  console.info(`Messages will at maximum occupy ${maxSlots} slots per Block`)
+  console.info(`Message delivery needs at least ${minimumBlocksNeeded} blocks (approx. ${minimumBlocksNeeded * 4} minutes)`)
   if (isDryRun) {
     console.info('Dry Run is active - nothing will be sent!')
   }
@@ -42,22 +45,28 @@ const bulkSend = async ({host, recipients, message, isDryRun}) => {
 
   console.info('Ok. There we go...')
   const {publicKey, signPrivateKey} = generateMasterKeys(passphrase);
-  const chunks = chunk(recipients, 10);
+  const chunks = chunk(recipients, ChunkSize);
   let progress = 0;
   for (let i = 0; i < chunks.length; i++) {
     const chunkedRecipients = chunks[i];
     const batch = chunkedRecipients
-      .map(recipientId => isDryRun
-        ? drySend()
-        : api.message.sendMessage({
-          recipientId,
-          senderPublicKey: publicKey,
-          senderPrivateKey: signPrivateKey,
-          deadline: 60 * 6,
-          feePlanck: fee,
-          message,
-          messageIsText: true,
-        })
+      .map(recipientId => {
+          progress += 1
+          const fee = getSlotFee(progress % maxSlots)
+
+          console.log('fee', fee)
+
+          return isDryRun
+            ? drySend()
+            : api.message.sendMessage({
+              recipientId,
+              senderPublicKey: publicKey,
+              senderPrivateKey: signPrivateKey,
+              feePlanck: fee,
+              message,
+              messageIsText: true,
+            })
+        }
       )
     progress += batch.length
     await Promise.all(batch)
