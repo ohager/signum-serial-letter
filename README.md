@@ -5,7 +5,7 @@ A small tool to send Burstcoin messages in masses
 
 > You need Nodejs (Version >=14) installed
 
-`npm i burst-serial-letter -g'
+`npm i burst-serial-letter -g`
 
 Now it should be available as CLI command, type:
 
@@ -46,7 +46,7 @@ Happy Spamming!
 ## About Slot System
 
 Burst uses a [slot-based prioritization mechanism](https://burstwiki.org/en/slot-based-transaction-fees/#slots) to determine which transactions have preference over others.
-Here we use it to influence the delivery time of messages. If you are willing to pay higher fees, you can stuff more messages in one block (up to 1020), such that the messages will delivered faster.
+Here we use it to influence the delivery time of messages. If you are willing to pay higher fees, you can stuff more messages in one block (up to 1020), such that the messages will be delivered faster.
 In the json file you can adjust the `maxSlots` size. The higher the value the more messages will be stuffed into a block.
 
 The following example shows how `maxSlots` affects costs and delivery times. 
