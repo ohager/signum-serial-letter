@@ -1,12 +1,11 @@
 const {readFileSync} = require('fs');
-const {isBurstAddress} = require('@burstjs/util')
-const {convertAddressToNumericId} = require('@burstjs/util');
 const Validator = require('fastest-validator');
+const {Address} = require("@signumjs/core");
 
 const schema = {
   host: {type: "url"},
   message: {type: "string", min: 3, max: 1000},
-  maxSlots: {type: "number", min: 1, max: 1020},
+  maxTx: {type: "number", min: 1, max: 1020},
   recipients: {
     type: "array", empty: false, unique: true, items: {
       type: 'string', empty: false, min: 10, max: 26
@@ -14,20 +13,18 @@ const schema = {
   }
 };
 
-const AccountIdRegex = /^\d{10,25}$/
 
-const unifyRecipientAddresses = (recipients) => {
-  return recipients.map(r => {
-    let id = r
-    if(r.startsWith('BURST')){
-      if(!isBurstAddress(r)) throw new Error(`Invalid Address ${r}`)
-      id = convertAddressToNumericId(r)
+const dedupeAndUnifyRecipients = (recipients) => {
+  const receivers = new Set()
+  for (let r of recipients) {
+    try {
+      const a = Address.create(r)
+      receivers.add(a.getNumericId())
+    } catch (e) {
+      console.warn(`Invalid address: ${r} -ignored`)
     }
-    if(!AccountIdRegex.test(id)){
-      throw new Error(`Invalid Address ${id}`)
-    }
-    return id
-  })
+  }
+  return Array.from(receivers);
 }
 
 const loadMessagingInfo = (filePath) => {
@@ -41,7 +38,7 @@ const loadMessagingInfo = (filePath) => {
       throw new Error('Parsing failed')
     }
 
-    const recipients = unifyRecipientAddresses(json.recipients);
+    const recipients = dedupeAndUnifyRecipients(json.recipients);
 
     return {
       ...json,

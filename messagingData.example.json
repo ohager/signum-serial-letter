@@ -1,7 +1,7 @@
 {
-  "host": "https://testnet-2.burst-alliance.org:6876",
+  "host": "https://europe3.testnet.signum.network/",
   "message": "Your message here",
-  "maxSlots": 10,
+  "maxTx": 10,
   "recipients": [
     // add account ids or addresses here
   ]

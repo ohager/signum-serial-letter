@@ -1,27 +1,15 @@
-const {BurstValue} = require('@burstjs/util')
-const {FeeQuantPlanck} = require('@burstjs/util');
+const {Amount} = require('@signumjs/util')
 
-const getSlotFee = slotIndex => FeeQuantPlanck * slotIndex
+const calculateSendFee =  (message) => {
+  const estimatedFeeFactor = Math.max(1, Math.ceil(message.length / 184));
+  return Amount.fromSigna(0.01).multiply(estimatedFeeFactor)
+}
 
-const calculateTotalFeeCosts = (messageCount, slotCount) => {
-
-  const blockCount = Math.floor(messageCount / slotCount)
-  const remainingSlots = messageCount % slotCount
-
-  const seriesSum = n => (n*(n+1))/2
-
-  const feePerBlock = blockCount > 0
-    ? BurstValue.fromPlanck(FeeQuantPlanck.toString()).multiply(seriesSum(slotCount))
-    : BurstValue.fromPlanck('0');
-
-  const remainingFee = BurstValue.fromPlanck(FeeQuantPlanck.toString()).multiply(seriesSum(remainingSlots));
-
-  return feePerBlock
-    .multiply(blockCount)
-    .add(remainingFee)
+const calculateTotalFeeCosts = (message, messageCount) => {
+  return calculateSendFee(message).clone().multiply(messageCount);
 }
 
 module.exports = {
+  calculateSendFee,
   calculateTotalFeeCosts,
-  getSlotFee
 }

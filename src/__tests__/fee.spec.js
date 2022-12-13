@@ -1,36 +1,52 @@
-const {FeeQuantPlanck, BurstValue} = require('@burstjs/util');
 const {calculateTotalFeeCosts} = require("../fees");
 
-describe('fees', () => {
-  it('should calculate single message fee as expected', () => {
-    let costsValue = calculateTotalFeeCosts(1, 10);
-    expect(costsValue.getPlanck()).toBe(FeeQuantPlanck.toString())
+describe('calculateTotalFeeCosts', () => {
+  it('should calculate single message fee as expected - 1 receiver', () => {
+    let costsValue = calculateTotalFeeCosts("Simple message", 1);
+    expect(costsValue.getSigna()).toBe('0.01')
   })
-
-  it('should calculate two message fees as expected', () => {
-    let costsValue = calculateTotalFeeCosts(2, 10);
-    const expectedCosts = BurstValue.fromPlanck(FeeQuantPlanck.toString()).multiply(3)
-    expect(costsValue.getPlanck()).toBe(expectedCosts.getPlanck())
+  it('should calculate single message fee as expected - 5 receivers', () => {
+    let costsValue = calculateTotalFeeCosts("Simple message", 5);
+    expect(costsValue.getSigna()).toBe('0.05')
   })
-
-  it('should calculate message fees for entire block as expected', () => {
-    let costsValue = calculateTotalFeeCosts(10, 10);
-    const expectedCosts = BurstValue.fromPlanck(FeeQuantPlanck.toString()).multiply(55)
-    expect(costsValue.getPlanck()).toBe(expectedCosts.getPlanck())
+  it('should calculate single message fee as expected - 1 receiver, 200 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(200), 1);
+    expect(costsValue.getSigna()).toBe('0.02')
   })
-
-  it('should calculate message fees for multiple integral blocks as expected', () => {
-    let costsValue = calculateTotalFeeCosts(20, 10);
-    const expectedCosts = BurstValue.fromPlanck(FeeQuantPlanck.toString()).multiply(55*2)
-    expect(costsValue.getPlanck()).toBe(expectedCosts.getPlanck())
+  it('should calculate single message fee as expected - 5 receivers, 200 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(200), 5);
+    expect(costsValue.getSigna()).toBe('0.1')
   })
-
-  it('should calculate message fees for multiple blocks as expected', () => {
-    let costsValue = calculateTotalFeeCosts(23, 10);
-    const expectedCosts = BurstValue
-      .fromPlanck(FeeQuantPlanck.toString())
-      .multiply(55*2)
-      .add(BurstValue.fromPlanck((FeeQuantPlanck * 6).toString()))
-    expect(costsValue.getPlanck()).toBe(expectedCosts.getPlanck())
+  it('should calculate single message fee as expected - 1 receiver, 400 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(400), 1);
+    expect(costsValue.getSigna()).toBe('0.03')
+  })
+  it('should calculate single message fee as expected - 5 receivers, 400 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(400), 5);
+    expect(costsValue.getSigna()).toBe('0.15')
+  })
+  it('should calculate single message fee as expected - 1 receiver, 600 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(600), 1);
+    expect(costsValue.getSigna()).toBe('0.04')
+  })
+  it('should calculate single message fee as expected - 5 receivers, 600 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(600), 5);
+    expect(costsValue.getSigna()).toBe('0.2')
+  })
+  it('should calculate single message fee as expected - 1 receiver, 800 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(800), 1);
+    expect(costsValue.getSigna()).toBe('0.05')
+  })
+  it('should calculate single message fee as expected - 5 receivers, 800 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(800), 5);
+    expect(costsValue.getSigna()).toBe('0.25')
+  })
+  it('should calculate single message fee as expected - 1 receiver, 1000 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(1000), 1);
+    expect(costsValue.getSigna()).toBe('0.06')
+  })
+  it('should calculate single message fee as expected - 5 receivers, 1000 bytes message', () => {
+    let costsValue = calculateTotalFeeCosts("x".repeat(1000), 5);
+    expect(costsValue.getSigna()).toBe('0.3')
   })
 })
