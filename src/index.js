@@ -5,6 +5,7 @@ const {loadMessagingInfo} = require('./loadMessagingData')
 const {bulkSend} = require('./bulkSend')
 
 const args = yargs
+  .scriptName('burst-serial-letter')
   .usage('Usage: $0 [options]')
   .example('$0 -d ./customData.json', 'Sends a message according the info file')
   .alias('d', 'data')
@@ -16,7 +17,7 @@ const args = yargs
   .describe('t', 'Runs without sending')
   .help('h')
   .alias('h', 'help')
-  .epilog('Made with ❤️ by ohager (BURST-9K9L-4CB5-88Y5-F5G4Z)')
+  .epilog('Made with ❤️ by ohager (S-9K9L-4CB5-88Y5-F5G4Z)')
   .argv;
 
 (async () => {
