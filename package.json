@@ -1,6 +1,6 @@
 {
   "name": "burst-serial-letter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Send messages in masses to the Signum blockchain",
   "main": "src/index.js",
   "bin": {
