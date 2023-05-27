@@ -32,7 +32,7 @@ const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
   console.info('Used Host:', host)
   console.info(`You are about to send to ${totalMessages} accounts.`)
   console.info(`This will cost you ${totalCosts.getSigna()} SIGNA`)
-  console.info(`Messages will at maximum occupy ${maxTx} slots/tx per Block`)
+  console.info(`There will be at maximum ${maxTx} tx per block`)
   console.info(`Message delivery needs at least ${minimumBlocksNeeded} blocks (approx. ${minimumBlocksNeeded * 4} minutes)`)
   if (isDryRun) {
     console.info('Dry Run is active - nothing will be sent!')

@@ -5,8 +5,16 @@
     {
       "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
       "msg": "Your text here",
-      "signa":
+      "signa": 20.12
+    },
+    {
+      "to":  "16107620026796983538", // account id
+      "signa": 10.12 // send signa only
+    },
+    {
+      "to":  "TS-QAJA-QW5Y-SWVP-4RVP4", // account id
+      "msg": "just a message -no money"
     }
-    // add account ids or addresses here
+    // add more
   ]
 }
