@@ -1,0 +1,12 @@
+{
+  "host": "https://europe3.testnet.signum.network/",
+  "maxTx": 10,
+  "recipients": [
+    {
+      "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
+      "msg": "Your text here",
+      "signa":
+    }
+    // add account ids or addresses here
+  ]
+}

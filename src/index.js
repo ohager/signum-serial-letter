@@ -5,7 +5,7 @@ const {loadMessagingInfo} = require('./loadMessagingData')
 const {bulkSend} = require('./bulkSend')
 
 const args = yargs
-  .scriptName('burst-serial-letter')
+  .scriptName('signum-serial-letter')
   .usage('Usage: $0 [options]')
   .example('$0 -d ./customData.json', 'Sends a message according the info file')
   .alias('d', 'data')
@@ -17,9 +17,9 @@ const args = yargs
   .describe('t', 'Runs without sending')
   .help('h')
   .alias('h', 'help')
-  .epilog('Made with ❤️ by ohager')
-  .epilog('Donate SIGNA to S-9K9L-4CB5-88Y5-F5G4Z')
-  .epilog('signum://ohager - https://ohager.web3')
+  .epilog('Made without 🧠 by ohager')
+  .epilog('Donate SIGNA to S-9K9L-4CB5-88Y5-F5G4Z - or use alias: ohager ')
+  .epilog('SNS: https://code.ohager@signum')
   .argv;
 
 (async () => {

@@ -1,3 +1,4 @@
+/* global describe, it */
 const {calculateTotalFeeCosts} = require("../fees");
 
 describe('calculateTotalFeeCosts', () => {

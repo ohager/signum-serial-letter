@@ -1,21 +1,21 @@
 {
-  "name": "burst-serial-letter",
-  "version": "2.0.1",
+  "name": "signum-serial-letter",
+  "version": "3.0.1",
   "description": "Send messages in masses to the Signum blockchain",
   "main": "src/index.js",
   "bin": {
-    "burst-serial-letter": "./src/index.js"
+    "signum-serial-letter": "./src/index.js"
   },
   "scripts": {
     "start": "node ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ohager/burst-serial-letter.git"
+    "url": "git+https://github.com/ohager/signum-serial-letter.git"
   },
   "keywords": [
     "signum",
@@ -25,19 +25,19 @@
   "author": "ohager",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ohager/burst-serial-letter/issues"
+    "url": "https://github.com/ohager/signum-serial-letter/issues"
   },
-  "homepage": "https://github.com/ohager/burst-serial-letter#readme",
+  "homepage": "https://github.com/ohager/signum-serial-letter#readme",
   "dependencies": {
-    "@signumjs/core": "^1.0.0-rc.53",
-    "@signumjs/crypto": "^1.0.0-rc.53",
-    "@signumjs/util": "^1.0.0-rc.53",
-    "fastest-validator": "^1.15.0",
-    "inquirer": "^8.2.5",
+    "@signumjs/core": "^1.0.0-rc.69",
+    "@signumjs/crypto": "^1.0.0-rc.69",
+    "@signumjs/util": "^1.0.0-rc.69",
+    "fastest-validator": "^1.17.0",
+    "inquirer": "^9.2.6",
     "lodash.chunk": "^4.2.0",
-    "yargs": "^17.6.2"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "jest": "^26.1.0"
+    "jest": "^29.5.0"
   }
 }
