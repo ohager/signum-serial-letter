@@ -44,8 +44,8 @@ Create a JSON file, e.g. `my-message-info.json` with the following fields:
 
 ```json
 {
-  "host": "https://europe3.testnet.signum.network/", // node to use, ideally local node!
-  "txPerBlock": 10, // how many transactions per block
+  "host": "http://localhost:8125", // node to use, ideally local node!
+  "txPerBlock": 100, // how many transactions per block
   "recipients": [
     {
       "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
@@ -57,7 +57,7 @@ Create a JSON file, e.g. `my-message-info.json` with the following fields:
       "signa": 10.12 // send signa only
     },
     {
-      "to":  "TS-QAJA-QW5Y-SWVP-4RVP4", // account address
+      "to":  "S-QAJA-QW5Y-SWVP-4RVP4", // account address
       "msg": "just a message -no money"
     }
     // add more
@@ -65,13 +65,16 @@ Create a JSON file, e.g. `my-message-info.json` with the following fields:
 }
 ```
 
+> (Here is an example file)[./data.example.json]
+
+
 Instead of adding the recipients as JSON objects, it's possible to reference a CSV file with a list of recipients, messages and amounts.
 The JSON of the `./my-message-info.json` would look like this 
 
 ```json
 {
-  "host": "https://europe3.testnet.signum.network/",
-  "txPerBlock": 10,
+  "host": "http://localhost:8125",
+  "txPerBlock": 100,
   "recipients": "./recipients.example.csv" // loads from a CSV file
 }
 ```
@@ -86,7 +89,7 @@ The CSV file is of the following format
 Example:
 
 ```csv
-TS-QAJA-QW5Y-SWVP-4RVP4,"some text",2.0
+S-QAJA-QW5Y-SWVP-4RVP4,"some text",2.0
 16107620026796983538,"another text",1.0
 4382407931849532142,,1.0
 7210b8941929030324540238450e985899989a7ad0267e0c76f668fde3b1016b,"only a message",
@@ -94,7 +97,9 @@ TS-QAJA-QW5Y-SWVP-4RVP4,"some text",2.0
 
 > Delimiter can be `,` or `;` - Double-Quotes `"` are optional - header is not allowed.
 
-#### Chunked Sending
+> Here is an [example JSON file](./data-csv.example.json) and [example CSV file](./recipients.example.csv)
+
+### Chunked Sending
 
 In case you want to send hundreds/thousands of messages you may up ending filling entire blocks just by your transactions. 
 In that case it's possible to send messages in chunks/batches per block. The parameter `txPerBlock` determines 
