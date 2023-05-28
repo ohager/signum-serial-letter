@@ -65,7 +65,7 @@ Create a JSON file, e.g. `my-message-info.json` with the following fields:
 }
 ```
 
-> (Here is an example file)[./data.example.json]
+> [Here is an example file](./data.example.json)
 
 
 Instead of adding the recipients as JSON objects, it's possible to reference a CSV file with a list of recipients, messages and amounts.
