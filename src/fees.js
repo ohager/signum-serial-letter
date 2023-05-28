@@ -5,8 +5,8 @@ const calculateSendFee =  (message) => {
   return Amount.fromSigna(0.01).multiply(estimatedFeeFactor)
 }
 
-const calculateTotalFeeCosts = (message, messageCount) => {
-  return calculateSendFee(message).clone().multiply(messageCount);
+const calculateTotalFeeCosts = (recipients) => {
+  return recipients.reduce((acc, r) => acc.add(calculateSendFee(r.msg || "")), Amount.Zero());
 }
 
 module.exports = {

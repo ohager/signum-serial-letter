@@ -1,20 +1,19 @@
 {
   "host": "https://europe3.testnet.signum.network/",
-  "maxTx": 10,
+  "txPerBlock": 2,
   "recipients": [
     {
-      "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
+      "to":  "7210b8941929030324540238450e985899989a7ad0267e0c76f668fde3b1016b",
       "msg": "Your text here",
       "signa": 20.12
     },
     {
-      "to":  "16107620026796983538", // account id
-      "signa": 10.12 // send signa only
+      "to":  "16107620026796983538",
+      "signa": 10.12
     },
     {
-      "to":  "TS-QAJA-QW5Y-SWVP-4RVP4", // account id
+      "to":  "TS-QAJA-QW5Y-SWVP-4RVP4",
       "msg": "just a message -no money"
     }
-    // add more
   ]
 }

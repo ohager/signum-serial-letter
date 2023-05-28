@@ -5,8 +5,6 @@ const chunk = require('lodash.chunk')
 const {calculateSendFee, calculateTotalFeeCosts} = require('./fees')
 const {Amount} = require("@signumjs/util");
 
-const ChunkSize = 10
-
 const askForPassphrase = async () => prompt([
   {
     type: 'password',
@@ -18,19 +16,18 @@ const askForPassphrase = async () => prompt([
 
 const drySend = () => Promise.resolve()
 
-const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
+const bulkSend = async ({host, recipients, txPerBlock, isDryRun}) => {
 
   const ledger = LedgerClientFactory.createClient({
     nodeHost: host
   });
-  const totalMessages = recipients.length
-
-  const totalCosts = calculateTotalFeeCosts(message, totalMessages)
-  const minimumBlocksNeeded = Math.ceil(totalMessages / maxTx)
+  const totalRecipients = recipients.length
+  const totalCosts = calculateTotalFeeCosts(recipients)
+  const minimumBlocksNeeded = Math.ceil(totalRecipients / txPerBlock)
   console.info('Used Host:', host)
-  console.info(`You are about to send to ${totalMessages} accounts.`)
+  console.info(`You are about to send to ${totalRecipients} accounts.`)
   console.info(`This will cost you ${totalCosts.getSigna()} SIGNA`)
-  console.info(`There will be at maximum ${maxTx} tx per block`)
+  console.info(`There will be at maximum ${txPerBlock} tx per block`)
   console.info(`Message delivery needs at least ${minimumBlocksNeeded} blocks (approx. ${minimumBlocksNeeded * 4} minutes)`)
   if (isDryRun) {
     console.info('Dry Run is active - nothing will be sent!')
@@ -45,10 +42,10 @@ const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
 
   console.info('Ok. There we go...')
   const {publicKey, signPrivateKey} = generateMasterKeys(passphrase);
-  const chunks = chunk(recipients, ChunkSize);
+  const chunks = chunk(recipients, txPerBlock);
   let chunkCount = 0
   let progress = 0;
-  let referencedTransactionFullHash = ""
+  let referencedTransactionFullHash = undefined
   for (const chunkedRecipients of chunks) {
     const batch = chunkedRecipients
       .filter(recipient => recipient.msg || recipient.signa)
@@ -67,7 +64,7 @@ const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
               feePlanck: sendFee.getPlanck(),
               message,
               messageIsText: true,
-              referencedTransactionFullHash
+              referencedTransactionFullHash,
             })
           }
 
@@ -100,7 +97,7 @@ const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
     if(lastPendingTransactionIndex !== -1){
       referencedTransactionFullHash = pendingTransactions[lastPendingTransactionIndex]
     }
-    console.info(`[Chunk ${++chunkCount}]: Sent ${progress} of ${totalMessages} messages`)
+    console.info(`[Chunk ${++chunkCount}]: Sent ${progress} of ${totalRecipients} messages`)
   }
 }
 

@@ -1,5 +1,5 @@
 {
   "host": "https://europe3.testnet.signum.network/",
   "maxTx": 10,
-  "recipients": "./recipients.example.csv" // loads from a CSV file
+  "recipients": "./recipients.example.csv"
 }

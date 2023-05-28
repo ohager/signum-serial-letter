@@ -7,7 +7,7 @@ const {loadCSVFile} = require("./loadCSVFile");
 
 const schema = {
   host: {type: "url"},
-  maxTx: {type: "number", min: 1, max: 1020},
+  txPerBlock: {type: "number", min: 1, max: 1020},
   recipients: [
     { // accounts
       type: "array", empty: false, unique: true, items: {
@@ -30,7 +30,8 @@ const dedupeAndUnifyRecipients = (recipients) => {
   for (let r of recipients) {
     try {
       const a = Address.create(r.to)
-      receivers.set(a.getNumericId(), r)
+      r.to = a.getNumericId();
+      receivers.set(r.to, r)
     } catch (e) {
       console.warn(`Invalid address: ${r} -ignored`)
     }

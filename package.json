@@ -1,7 +1,7 @@
 {
   "name": "signum-serial-letter",
-  "version": "3.0.1",
-  "description": "Send messages in masses to the Signum blockchain",
+  "version": "3.0.0",
+  "description": "Send messages/amounts in masses to the Signum blockchain",
   "main": "src/index.js",
   "bin": {
     "signum-serial-letter": "./src/index.js"
@@ -34,7 +34,7 @@
     "@signumjs/crypto": "^1.0.0-rc.69",
     "@signumjs/util": "^1.0.0-rc.69",
     "fastest-validator": "^1.17.0",
-    "inquirer": "^9.2.6",
+    "inquirer": "^8.2.5",
     "lodash.chunk": "^4.2.0",
     "yargs": "^17.7.2"
   },

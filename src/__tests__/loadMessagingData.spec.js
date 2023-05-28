@@ -6,10 +6,10 @@ describe('loadMessagingData', () => {
     const data = loadMessagingData(join(__dirname, "./testdata.json"));
     expect(data).toEqual({
       "host": "https://europe3.testnet.signum.network/",
-      "maxTx": 10,
+      "txPerBlock": 10,
       "recipients": [
         {
-          "to": "TS-QAJA-QW5Y-SWVP-4RVP4",
+          "to": "2402520554221019656",
           "msg": "just a message -no money"
         },
         {
@@ -17,7 +17,7 @@ describe('loadMessagingData', () => {
           "signa": 10.12
         },
         {
-          "to": "TS-XSRG-TG5D-4S9B-5JDNT"
+          "to": "4382407931849532142"
         }
       ]
     })
@@ -26,10 +26,10 @@ describe('loadMessagingData', () => {
     const data = loadMessagingData(join(__dirname, "./testdata-csv.json"));
     expect(data).toEqual({
       "host": "https://europe3.testnet.signum.network/",
-      "maxTx": 10,
+      "txPerBlock": 10,
       "recipients": [
         {
-          "to": "TS-QAJA-QW5Y-SWVP-4RVP4",
+          "to": "2402520554221019656",
           "msg": "some text"
         },
         {

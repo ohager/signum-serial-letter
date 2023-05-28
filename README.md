@@ -24,7 +24,7 @@ Create a JSON file, e.g. `my-message-info.json` with the following fields:
 ```json
 {
   "host": "https://europe3.testnet.signum.network/",
-  "maxTx": 10,
+  "txPerBlock": 10,
   "recipients": [
     {
       "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
