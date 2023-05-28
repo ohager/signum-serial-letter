@@ -1,0 +1,14 @@
+{
+  "host": "https://europe3.testnet.signum.network/",
+  "maxTx": 10,
+  "recipients": [
+    {
+      "to":  "",
+      "msg": "Your text here",
+      "signa": 20.12
+    },
+    {
+      "foo": "bla"
+    }
+  ]
+}

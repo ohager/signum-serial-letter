@@ -1,32 +1,18 @@
 const {readFileSync} = require('fs');
+const {join, isAbsolute} = require('path');
+const {cwd} = require('process')
 const Validator = require('fastest-validator');
 const {Address} = require("@signumjs/core");
+const {loadCSVFile} = require("./loadCSVFile");
 
-const schemaSameMessage = {
-  host: {type: "url"},
-  message: {type: "string", min: 1, max: 1000},
-  maxTx: {type: "number", min: 1, max: 1020},
-  recipients: [
-    { // accounts
-      type: "array", empty: false, unique: true, items: {
-        type: 'string', empty: false, min: 10, max: 26
-      }
-    },
-    { // filename
-      type: 'string', empty: false
-    }
-  ]
-};
-
-
-const schemaMultiMessage = {
+const schema = {
   host: {type: "url"},
   maxTx: {type: "number", min: 1, max: 1020},
   recipients: [
     { // accounts
       type: "array", empty: false, unique: true, items: {
         type: 'object', empty: false, props: {
-          to: {type: 'string', empty: false, min: 10, max: 26},
+          to: {type: 'string', empty: false, min: 10, max: 64},
           msg: {type: 'string', empty: false, min: 1, max: 1000, optional: true},
           signa: {type: "number", optional: true, positive: true}
           // we might expand to token and quantity
@@ -40,77 +26,36 @@ const schemaMultiMessage = {
 };
 
 const dedupeAndUnifyRecipients = (recipients) => {
-  const receivers = new Set()
+  const receivers = new Map()
   for (let r of recipients) {
     try {
-      const a = Address.create(r)
-      receivers.add(a.getNumericId())
+      const a = Address.create(r.to)
+      receivers.set(a.getNumericId(), r)
     } catch (e) {
       console.warn(`Invalid address: ${r} -ignored`)
     }
   }
-  return Array.from(receivers);
+  return Array.from(receivers.values());
 }
 
-function parseSameMessageData(json) {
-  const result = new Validator().validate(json, schemaSameMessage)
-  if (result !== true) {
-    console.error(result)
-    throw new Error('Parsing failed')
-  }
-
-  let recipients = []
-  if(typeof json.recipients === "string"){
-    // read csv file
-    recipients = []
-  }
-  else {
-    recipients = dedupeAndUnifyRecipients(json.recipients);
-  }
-
-  return {
-    ...json,
-    recipients
-  };
-}
-
-function parseMulitMessageData(json) {
-  const result = new Validator().validate(json, schemaMultiMessage)
-  if (result !== true) {
-    console.error(result)
-    throw new Error('Parsing failed')
-  }
-
-  let recipients = []
-  if(typeof json.recipients === "string"){
-    // read csv file
-    recipients = []
-  }
-  else {
-    recipients = dedupeAndUnifyRecipients(json.recipients);
-  }
-
-  return {
-    ...json,
-    recipients
-  };
-}
-const loadMessagingInfo = (filePath) => {
+const loadMessagingData = (filePath) => {
   try {
     console.info(`Loading ${filePath}...`)
     const jsonStr = readFileSync(filePath).toString('utf-8');
-    const json = JSON.parse(jsonStr);
-    if (json.message) {
-      return parseSameMessageData(json)
-    }
 
+    const json = JSON.parse(jsonStr);
     const result = new Validator().validate(json, schema)
     if (result !== true) {
       console.error(result)
-      throw new Error('Parsing failed')
+      throw new Error(`Parsing failed: [${result.map( e => e.message)}]`)
     }
-
-    const recipients = dedupeAndUnifyRecipients(json.recipients);
+    let recipients = json.recipients;
+    if(typeof json.recipients === "string"){
+      // read csv file
+      const filePath = isAbsolute(json.recipients) ? json.recipients : join(cwd(), json.recipients);
+      recipients = loadCSVFile(filePath);
+    }
+    recipients = dedupeAndUnifyRecipients(recipients);
 
     return {
       ...json,
@@ -118,10 +63,10 @@ const loadMessagingInfo = (filePath) => {
     };
   } catch (e) {
     console.error(e.message)
-    throw new Error('Parsing failed')
+    throw e;
   }
 }
 
 module.exports = {
-  loadMessagingInfo
+  loadMessagingData
 }

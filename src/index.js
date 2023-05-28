@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-const {loadMessagingInfo} = require('./loadMessagingData')
+const {loadMessagingData} = require('./loadMessagingData')
 const {bulkSend} = require('./bulkSend')
 
 const args = yargs
@@ -17,14 +17,14 @@ const args = yargs
   .describe('t', 'Runs without sending')
   .help('h')
   .alias('h', 'help')
-  .epilog('Made without 🧠 by ohager')
+  .epilog('Made with 🕺 by ohager')
   .epilog('Donate SIGNA to S-9K9L-4CB5-88Y5-F5G4Z - or use alias: ohager ')
   .epilog('SNS: https://code.ohager@signum')
   .argv;
 
 (async () => {
   try {
-    const messagingInfo = loadMessagingInfo(args.d);
+    const messagingInfo = loadMessagingData(args.d);
     await bulkSend({ ...messagingInfo, isDryRun : args.t })
   } catch (e) {
     console.error('Oh damn. This didn\'t work')

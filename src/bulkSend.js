@@ -1,8 +1,9 @@
-const {LedgerClientFactory} = require('@signumjs/core')
+const {LedgerClientFactory, AttachmentMessage} = require('@signumjs/core')
 const {generateMasterKeys} = require('@signumjs/crypto')
 const {prompt} = require('inquirer')
 const chunk = require('lodash.chunk')
 const {calculateSendFee, calculateTotalFeeCosts} = require('./fees')
+const {Amount} = require("@signumjs/util");
 
 const ChunkSize = 10
 
@@ -15,10 +16,7 @@ const askForPassphrase = async () => prompt([
   }
 ])
 
-const drySend = () =>
-  new Promise(resolve => {
-    setTimeout(resolve, 1000)
-  })
+const drySend = () => Promise.resolve()
 
 const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
 
@@ -47,26 +45,62 @@ const bulkSend = async ({host, recipients, message, maxTx, isDryRun}) => {
 
   console.info('Ok. There we go...')
   const {publicKey, signPrivateKey} = generateMasterKeys(passphrase);
-  const sendFee = calculateSendFee(message)
   const chunks = chunk(recipients, ChunkSize);
+  let chunkCount = 0
   let progress = 0;
+  let referencedTransactionFullHash = ""
   for (const chunkedRecipients of chunks) {
     const batch = chunkedRecipients
-      .map(recipientId =>
-        isDryRun
-          ? drySend()
-          : ledger.message.sendMessage({
-            recipientId,
-            senderPublicKey: publicKey,
-            senderPrivateKey: signPrivateKey,
-            feePlanck: sendFee.getPlanck(),
-            message,
-            messageIsText: true,
-          })
+      .filter(recipient => recipient.msg || recipient.signa)
+      .map(recipient => {
+          if (isDryRun) {
+            return drySend()
+          }
+          const message = recipient.msg || ""
+          const sendFee = calculateSendFee(message)
+          const amountToSend = Amount.fromSigna(recipient.signa || "0")
+          if (amountToSend.equals(Amount.Zero()) && message) {
+            return ledger.message.sendMessage({
+              recipientId: recipient.to,
+              senderPublicKey: publicKey,
+              senderPrivateKey: signPrivateKey,
+              feePlanck: sendFee.getPlanck(),
+              message,
+              messageIsText: true,
+              referencedTransactionFullHash
+            })
+          }
+
+          if (amountToSend.greater(Amount.Zero())) {
+            const attachment = message ? new AttachmentMessage({
+              message,
+              messageIsText: true
+            }) : undefined
+
+            return ledger.transaction.sendAmountToSingleRecipient({
+              recipientId: recipient.to,
+              senderPublicKey: publicKey,
+              senderPrivateKey: signPrivateKey,
+              feePlanck: sendFee.getPlanck(),
+              amountPlanck: amountToSend.getPlanck(),
+              attachment,
+              referencedTransactionFullHash
+            })
+          }
+
+          return drySend()
+        }
       )
     progress += batch.length
-    await Promise.all(batch)
-    console.info(`Sent ${progress} of ${totalMessages} messages`)
+    const pendingTransactions = await Promise.all(batch)
+
+    // to chain transactions in blocks, we get the last successful submitted transactions fullHash
+    // that way next pending transaction will be executed only when previous tx were confirmed by the network
+    const lastPendingTransactionIndex = pendingTransactions.lastIndexOf( tx => tx.fullHash)
+    if(lastPendingTransactionIndex !== -1){
+      referencedTransactionFullHash = pendingTransactions[lastPendingTransactionIndex]
+    }
+    console.info(`[Chunk ${++chunkCount}]: Sent ${progress} of ${totalMessages} messages`)
   }
 }
 
