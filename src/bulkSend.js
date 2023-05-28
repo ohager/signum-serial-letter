@@ -93,9 +93,12 @@ const bulkSend = async ({host, recipients, txPerBlock, isDryRun}) => {
 
     // to chain transactions in blocks, we get the last successful submitted transactions fullHash
     // that way next pending transaction will be executed only when previous tx were confirmed by the network
-    const lastPendingTransactionIndex = pendingTransactions.lastIndexOf( tx => tx.fullHash)
-    if(lastPendingTransactionIndex !== -1){
-      referencedTransactionFullHash = pendingTransactions[lastPendingTransactionIndex]
+    while(pendingTransactions){
+      const ptx = pendingTransactions.pop();
+      if(ptx.fullHash){
+        referencedTransactionFullHash = ptx.fullHash;
+        break;
+      }
     }
     console.info(`[Chunk ${++chunkCount}]: Sent ${progress} of ${totalRecipients} messages`)
   }

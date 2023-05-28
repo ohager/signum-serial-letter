@@ -1,6 +1,6 @@
 {
   "name": "signum-serial-letter",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "Send messages/amounts in masses to the Signum blockchain",
   "main": "src/index.js",
   "bin": {
@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/ohager/signum-serial-letter#readme",
   "dependencies": {
-    "@signumjs/core": "^1.0.0-rc.69",
-    "@signumjs/crypto": "^1.0.0-rc.69",
-    "@signumjs/util": "^1.0.0-rc.69",
+    "@signumjs/core": "^1.0.0-rc.70",
+    "@signumjs/crypto": "^1.0.0-rc.70",
+    "@signumjs/util": "^1.0.0-rc.70",
     "fastest-validator": "^1.17.0",
     "inquirer": "^8.2.5",
     "lodash.chunk": "^4.2.0",
