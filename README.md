@@ -1,3 +1,5 @@
+![npm](https://img.shields.io/npm/v/signum-serial-letter)
+
 # signum-serial-letter
 A small tool to send messages and amount in masses on [Signum Blockchain](https://signum.network)
 
