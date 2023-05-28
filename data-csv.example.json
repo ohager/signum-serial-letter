@@ -1,5 +1,5 @@
 {
-  "host": "https://europe3.testnet.signum.network/",
-  "txPerBlock": 2,
+  "host": "http://localhost:8125",
+  "txPerBlock": 100,
   "recipients": "./recipients.example.csv"
 }

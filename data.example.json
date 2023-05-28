@@ -1,6 +1,6 @@
 {
-  "host": "https://europe3.testnet.signum.network/",
-  "txPerBlock": 2,
+  "host": "http://localhost:8125",
+  "txPerBlock": 100,
   "recipients": [
     {
       "to":  "7210b8941929030324540238450e985899989a7ad0267e0c76f668fde3b1016b",
@@ -12,7 +12,7 @@
       "signa": 0.2
     },
     {
-      "to":  "TS-QAJA-QW5Y-SWVP-4RVP4",
+      "to":  "S-QAJA-QW5Y-SWVP-4RVP4",
       "msg": "just a message -no money"
     }
   ]
