@@ -1,5 +1,5 @@
 # signum-serial-letter
-A small tool to send messages in masses on [Signum Blockchain](https://signum.network)
+A small tool to send messages and amount in masses on [Signum Blockchain](https://signum.network)
 
 ## Installation
 
@@ -17,14 +17,35 @@ The tools come with its built-in help.
 
 Just type `signum-serial-letter -h`
 
+--------------
+### Quick Start
+
+Create a JSON file according to the [JSON File Format](#json-file-format)
+
+Run `signum-serial-letter -d ./my-data.json`
+
+
+#### Test Run 
+Keep in mind, that sending messages costs you SIGNA.
+So, better to test your serial letter on testnet before.
+You can/should even run a dry run, without actually sending the messages using the `--test`/`-t` flag:
+
+`signum-serial-letter -d ./my-data.json -t` or `signum-serial-letter --data ./my-data.json --test` 
+
+
+------------
+
+
+### JSON File Format
+
 Before you can send data you need to prepare a JSON file to configure the Signum Node, the message and the recipient list.
 
 Create a JSON file, e.g. `my-message-info.json` with the following fields:
 
 ```json
 {
-  "host": "https://europe3.testnet.signum.network/",
-  "txPerBlock": 10,
+  "host": "https://europe3.testnet.signum.network/", // node to use, ideally local node!
+  "txPerBlock": 10, // how many transactions per block
   "recipients": [
     {
       "to":  "c213e4144ba84af94aae2458308fae1f0cb083870c8f3012eea58147f3b09d4a", // pub key
@@ -50,11 +71,13 @@ The JSON of the `./my-message-info.json` would look like this
 ```json
 {
   "host": "https://europe3.testnet.signum.network/",
-  "maxTx": 10,
+  "txPerBlock": 10,
   "recipients": "./recipients.example.csv" // loads from a CSV file
 }
 ```
 > The path of the CSV file can be absolute or relative the the current working directory
+
+### CSV Recipient File Format
 
 The CSV file is of the following format
 
@@ -71,12 +94,10 @@ TS-QAJA-QW5Y-SWVP-4RVP4,"some text",2.0
 
 > Delimiter can be `,` or `;` - Double-Quotes `"` are optional - header is not allowed.
 
-Then run `signum-serial-letter -d ./my-message-info.json`
+#### Chunked Sending
 
-Keep in mind, that sending messages costs you SIGNA. 
-So, better to test your serial letter on testnet before. 
-You can/should even run a dry run, without actually sending the messages using the `--test` flag:
-
-`signum-serial-letter -d ./my-message-info.json --test`
-
-Happy Spamming!
+In case you want to send hundreds/thousands of messages you may up ending filling entire blocks just by your transactions. 
+In that case it's possible to send messages in chunks/batches per block. The parameter `txPerBlock` determines 
+how many transactions shall be executed per block. As an example, you can set `txPerBlock` to 100 and send to 1000 accounts. 
+All transactions will be pushed to the nodes _mempool_, but by using the `referencedTransactionFullHash` feature from Signum the
+effective submission will be split into chunks and subsequently sent over the next 10 blocks. 
